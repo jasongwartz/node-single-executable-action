@@ -97,6 +97,8 @@ export async function run(): Promise<void> {
     platform() === 'darwin' &&
       (await exec.exec('codesign', ['--sign', '-', 'bin'], execOptions))
     await io.cp(join(buildDirectory, 'bin'), dirname(bundleEntrypoint))
+
+    core.setOutput('binary-path', join(dirname(bundleEntrypoint), 'bin'))
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) {

@@ -15,8 +15,8 @@ inputs:
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  binary-path:
+    description: The filesystem path to the Node binary with the code embedded.
 
 runs:
   using: node20

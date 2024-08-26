@@ -7,12 +7,14 @@ import * as esbuild from 'esbuild'
 import { promisify } from 'util'
 
 let getInputMock: jest.SpiedFunction<typeof core.getInput>
+let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
 
 describe('e2e', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
+    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
   })
 
   it('can build and execute a single executable application', async () => {
@@ -36,6 +38,11 @@ describe('e2e', () => {
     await run()
     expect(getInputMock).toHaveBeenCalledTimes(1)
     expect(getInputMock).toHaveBeenCalledWith('bundle')
+    expect(setOutputMock).toHaveBeenCalledTimes(1)
+    expect(setOutputMock).toHaveBeenCalledWith(
+      'binary-path',
+      expect.stringMatching(RegExp(/\/.+\/bin/))
+    )
 
     expect(async () =>
       access(join(__dirname, '.build/bin'), constants.X_OK | constants.R_OK)
