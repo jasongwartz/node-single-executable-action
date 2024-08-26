@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import { run } from '../../src/main'
-import { access, constants, cp } from 'fs/promises'
+import { access, constants } from 'fs/promises'
 import { join } from 'path'
 import { execFile } from 'child_process'
 import * as esbuild from 'esbuild'
@@ -26,7 +26,7 @@ describe('e2e', () => {
     })
 
     // Build the single-file bundle
-    let bundle = await esbuild.build({
+    await esbuild.build({
       entryPoints: [join(__dirname, 'main.ts')],
       bundle: true,
       platform: 'node',

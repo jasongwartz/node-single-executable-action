@@ -67,7 +67,7 @@ jobs:
       - name: Bundle test application source
         id: build
         run:
-          npx esbuild __tests__/e2e/main.ts --bundle --platform=node \
+          npx esbuild __tests__/e2e/main.ts --bundle --platform=node
           --outfile=__tests__/e2e/.build/bundle.cjs
 
       - name: Test Local Action
