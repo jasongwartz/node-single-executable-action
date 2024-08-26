@@ -80,6 +80,7 @@ be solved before opening a PR.
 ### Helpful Areas for Contribution
 
 Some particular areas where contributions would be useful include:
+
 - [Asset embedding](https://nodejs.org/api/single-executable-applications.html#assets)
 - Windows support
 - Test coverage (failure modes and edge cases)
