@@ -74,7 +74,8 @@ jobs:
         id: test-action
         uses: ./
         with:
-          bundle: __tests__/e2e/.build/bundle.cjs
+          # TODO: debug why the action seems to invoke with cwd as the `dist` directory
+          bundle: ../__tests__/e2e/.build/bundle.cjs
 
       - name: Verify binary exectuable
         run: ./__tests__/e2e/.build/bin
