@@ -1,19 +1,17 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: Build Node single executable application
+description:
+  Use the experimental "--experimental-sea-config" to build a single executable
+author: Jason Gwartz
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'user-plus'
+  color: 'green'
 
-# Define your inputs here.
 inputs:
   bundle:
     description: Path to the already-bundled Node code.
     required: true
 
-# Define your outputs here.
 outputs:
   binary-path:
     description: The filesystem path to the Node binary with the code embedded.
