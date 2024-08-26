@@ -1,213 +1,90 @@
-# Create a GitHub Action Using TypeScript
+# GitHub Action: Node Single Executable
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
+[![GitHub Super-Linter](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
-Use this template to bootstrap the creation of a TypeScript action. :rocket:
+This GitHub Action can be used to create
+[single executable applications in Node.js](https://nodejs.org/api/single-executable-applications.html),
+where a "single executable application" (or SEA) is a packaging mechanism that
+embeds some JavaScript source code together with the Node.js runtime. The
+resulting executable can be distributed and run on machines that do not
+otherwise have an installation Node.js, or which would have an incompatible
+version. This can be particularly useful in creating portable command-line tools
+or self-contained scripts.
 
-This template includes compilation support, tests, a validation workflow,
-publishing, and versioning guidance.
+See also:
 
-If you are new, there's also a simpler introduction in the
-[Hello world JavaScript action repository](https://github.com/actions/hello-world-javascript-action).
+- https://nodejs.org/api/single-executable-applications.html
+- https://github.com/nodejs/single-executable
+- https://notes.billmill.org/programming/javascript/Making_a_single-file_executable_with_node_and_esbuild.html
 
-## Create Your Own Action
+## How To Use This Action
 
-To create your own action, you can use this repository as a template! Just
-follow the below instructions:
+To use this action, you'll need to create a GitHub Workflow that does the
+following:
 
-1. Click the **Use this template** button at the top of the repository
-1. Select **Create a new repository**
-1. Select an owner and name for your new repository
-1. Click **Create repository**
-1. Clone your new repository
+1. Checkout your code
+1. Use `actions/setup-node` to install the required Node.js version (which will
+   be packaged with your application)
+1. Use a bundler (like `esbuild`, `rollup`, or `ncc`) to create a single
+   JavaScript file that includes all of your source code and dependencies
+   (examples below)
+1. Run this action, passing the file path to your bundled JavaScript file
 
-> [!IMPORTANT]
->
-> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
-> details on how to use this file, see
-> [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
-
-## Initial Setup
-
-After you've cloned the repository to your local machine or codespace, you'll
-need to perform some initial setup steps before you can develop your action.
-
-> [!NOTE]
->
-> You'll need to have a reasonably modern version of
-> [Node.js](https://nodejs.org) handy (20.x or later should work!). If you are
-> using a version manager like [`nodenv`](https://github.com/nodenv/nodenv) or
-> [`nvm`](https://github.com/nvm-sh/nvm), this template has a `.node-version`
-> file at the root of the repository that will be used to automatically switch
-> to the correct version when you `cd` into the repository. Additionally, this
-> `.node-version` file is used by GitHub Actions in any `actions/setup-node`
-> actions.
-
-1. :hammer_and_wrench: Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-1. :building_construction: Package the TypeScript for distribution
-
-   ```bash
-   npm run bundle
-   ```
-
-1. :white_check_mark: Run the tests
-
-   ```bash
-   $ npm test
-
-   PASS  ./index.test.js
-     ✓ throws invalid number (3ms)
-     ✓ wait 500 ms (504ms)
-     ✓ test runs (95ms)
-
-   ...
-   ```
-
-## Update the Action Metadata
-
-The [`action.yml`](action.yml) file defines metadata about your action, such as
-input(s) and output(s). For details about this file, see
-[Metadata syntax for GitHub Actions](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions).
-
-When you copy this repository, update `action.yml` with the name, description,
-inputs, and outputs for your action.
-
-## Update the Action Code
-
-The [`src/`](./src/) directory is the heart of your action! This contains the
-source code that will be run when your action is invoked. You can replace the
-contents of this directory with your own code.
-
-There are a few things to keep in mind when writing your action code:
-
-- Most GitHub Actions toolkit and CI/CD operations are processed asynchronously.
-  In `main.ts`, you will see that the action is run in an `async` function.
-
-  ```javascript
-  import * as core from '@actions/core'
-  //...
-
-  async function run() {
-    try {
-      //...
-    } catch (error) {
-      core.setFailed(error.message)
-    }
-  }
-  ```
-
-  For more information about the GitHub Actions toolkit, see the
-  [documentation](https://github.com/actions/toolkit/blob/master/README.md).
-
-So, what are you waiting for? Go ahead and start customizing your action!
-
-1. Create a new branch
-
-   ```bash
-   git checkout -b releases/v1
-   ```
-
-1. Replace the contents of `src/` with your action code
-1. Add tests to `__tests__/` for your source code
-1. Format, test, and build the action
-
-   ```bash
-   npm run all
-   ```
-
-   > This step is important! It will run [`ncc`](https://github.com/vercel/ncc)
-   > to build the final JavaScript action code with all dependencies included.
-   > If you do not run this step, your action will not work correctly when it is
-   > used in a workflow. This step also includes the `--license` option for
-   > `ncc`, which will create a license file for all of the production node
-   > modules used in your project.
-
-1. Commit your changes
-
-   ```bash
-   git add .
-   git commit -m "My first action is ready!"
-   ```
-
-1. Push them to your repository
-
-   ```bash
-   git push -u origin releases/v1
-   ```
-
-1. Create a pull request and get feedback on your action
-1. Merge the pull request into the `main` branch
-
-Your action is now published! :rocket:
-
-For information about versioning your action, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
-
-## Validate the Action
-
-You can now validate the action by referencing it in a workflow file. For
-example, [`ci.yml`](./.github/workflows/ci.yml) demonstrates how to reference an
-action in the same repository.
+Example configuration:
 
 ```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
+- name: Checkout
+  uses: actions/checkout@v4
 
-  - name: Test Local Action
-    id: test-action
-    uses: ./
-    with:
-      milliseconds: 1000
+- uses: actions/setup-node@v4
+  with:
+    node-version: 20
 
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+- run: npm ci
+
+- name: Bundle test application source
+  # This example uses `esbuild`, but you can use any bundler
+  # that will include all sources and dependencies
+  run:
+    npx esbuild your_source_entrypoint.ts --bundle --platform=node
+    --outfile=dist/main.cjs
+
+- uses: jasongwartz/node-single-executable-action@v0
+  with:
+    # This must be the same file that was generated by a
+    # bundler in the previous step
+    bundle: dist/main.cjs
+
+- name: Verify binary exectuable
+  # You should now be able to execute your SEA
+  run: ./dist/bin
 ```
 
-For example workflow runs, check out the
-[Actions tab](https://github.com/actions/typescript-action/actions)! :rocket:
+## Development
 
-## Usage
+Contributions are very welcome! Please create an issue describing the problem to
+be solved before opening a PR.
 
-After testing, you can create version tag(s) that developers can use to
-reference different stable versions of your action. For more information, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
+### Getting Started
 
-To include the action in a workflow in another repository, you can use the
-`uses` syntax with the `@` symbol to reference a specific branch, tag, or commit
-hash.
+1. Install the dependencies: `npm install`
+1. Write your code changes
+1. Run the tests: `npm test`
+1. Check the formatting and linting: `npm run format:check` and `npm run lint`
+1. Update the checked-in `dist`: `npm run package`
 
-```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
+### Helpful Areas for Contribution
 
-  - name: Test Local Action
-    id: test-action
-    uses: actions/typescript-action@v1 # Commit with the `v1` tag
-    with:
-      milliseconds: 1000
+Some particular areas where contributions would be useful include:
+- [Asset embedding](https://nodejs.org/api/single-executable-applications.html#assets)
+- Windows support
+- Test coverage (failure modes and edge cases)
 
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
-```
-
-## Publishing a New Release
+### Publishing a New Release
 
 This project includes a helper script, [`script/release`](./script/release)
 designed to streamline the process of tagging and pushing new releases for
