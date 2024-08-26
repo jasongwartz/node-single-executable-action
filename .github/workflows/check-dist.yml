@@ -49,6 +49,8 @@ jobs:
       # expected.
       - name: Compare Directories
         id: diff
+        # This step seems to hang sometimes
+        timeout-minutes: 1
         run: |
           if [ ! -d dist/ ]; then
             echo "Expected dist/ directory does not exist.  See status below:"
