@@ -3,7 +3,6 @@
 [![GitHub Super-Linter](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
 ![CI](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/ci.yml/badge.svg)
 [![Check dist/](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/jasongwartz/node-single-executable-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
 This GitHub Action can be used to create
@@ -17,9 +16,9 @@ or self-contained scripts.
 
 See also:
 
-- https://nodejs.org/api/single-executable-applications.html
-- https://github.com/nodejs/single-executable
-- https://notes.billmill.org/programming/javascript/Making_a_single-file_executable_with_node_and_esbuild.html
+- [Node SEA documentation](https://nodejs.org/api/single-executable-applications.html)
+- [Node SEA team on GitHub](https://github.com/nodejs/single-executable)
+- [A helpful blog post on the subject](https://notes.billmill.org/programming/javascript/Making_a_single-file_executable_with_node_and_esbuild.html)
 
 ## How To Use This Action
 

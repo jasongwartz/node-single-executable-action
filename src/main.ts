@@ -1,6 +1,8 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import * as io from '@actions/io'
+import * as github from '@actions/github'
+import { DefaultArtifactClient } from '@actions/artifact'
 import {
   access,
   readFile,
@@ -19,15 +21,14 @@ import { inject } from 'postject'
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
-  let bundleEntrypoint = core.getInput('bundle')
-  if (!bundleEntrypoint) {
-    throw new Error('The input "bundle" is required')
-  }
+  let bundleEntrypoint = core.getInput('bundle', { required: true })
 
   if (!isAbsolute(bundleEntrypoint)) {
     bundleEntrypoint = join(__dirname, bundleEntrypoint)
   }
   core.debug(`Resolved bundle file with absolute path: ${bundleEntrypoint}`)
+
+  const binaryFilename = core.getInput('name') || github.context.repo.repo
 
   try {
     await access(bundleEntrypoint, constants.R_OK)
@@ -57,7 +58,7 @@ export async function run(): Promise<void> {
   try {
     const nodePath = await realpath(await io.which('node', true))
     core.debug(`Found node path: ${nodePath}`)
-    const binaryPath = join(buildDirectory, 'bin')
+    const binaryPath = join(buildDirectory, binaryFilename)
     core.debug(`Copying node binary to path: ${binaryPath}`)
     await io.cp(nodePath, binaryPath)
     await chmod(binaryPath, 0o751)
@@ -82,10 +83,14 @@ export async function run(): Promise<void> {
     )
 
     platform() === 'darwin' &&
-      (await exec.exec('codesign', ['--remove-signature', 'bin'], execOptions))
+      (await exec.exec(
+        'codesign',
+        ['--remove-signature', binaryFilename],
+        execOptions
+      ))
 
     await inject(
-      join(buildDirectory, 'bin'),
+      join(buildDirectory, binaryFilename),
       'NODE_SEA_BLOB',
       await readFile(blobFilepath),
       {
@@ -95,10 +100,34 @@ export async function run(): Promise<void> {
     )
 
     platform() === 'darwin' &&
-      (await exec.exec('codesign', ['--sign', '-', 'bin'], execOptions))
-    await io.cp(join(buildDirectory, 'bin'), dirname(bundleEntrypoint))
+      (await exec.exec(
+        'codesign',
+        ['--sign', '-', binaryFilename],
+        execOptions
+      ))
 
-    core.setOutput('binary-path', join(dirname(bundleEntrypoint), 'bin'))
+    const binaryFullPath = join(dirname(bundleEntrypoint), binaryFilename)
+    await io.cp(join(buildDirectory, binaryFilename), binaryFullPath)
+    core.setOutput(
+      'binary-path',
+      join(dirname(bundleEntrypoint), binaryFullPath)
+    )
+
+    const shouldUploadArtifact = core.getInput('upload-workflow-artifact')
+    if (shouldUploadArtifact) {
+      const artifact = new DefaultArtifactClient()
+
+      const { id, size } = await artifact.uploadArtifact(
+        // name of the artifact
+        binaryFilename,
+        // files to include (supports absolute and relative paths)
+        [binaryFullPath],
+        dirname(binaryFullPath)
+      )
+      core.info(
+        `Uploaded artifact "${binaryFilename}" with ID "${id}" (${size} bytes)`
+      )
+    }
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) {
