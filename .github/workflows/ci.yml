@@ -79,4 +79,4 @@ jobs:
           name: test-binary-${{ github.sha }}
 
       - name: Verify binary exectuable
-        run: ./__tests__/e2e/.build/bin
+        run: ./__tests__/e2e/.build/test-binary-${{ github.sha }}
