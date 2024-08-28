@@ -50,7 +50,10 @@ describe('e2e', () => {
     )
 
     expect(async () =>
-      access(join(__dirname, '.build/bin'), constants.X_OK | constants.R_OK)
+      access(
+        join(__dirname, `.build/${outputBinaryName}`),
+        constants.X_OK | constants.R_OK
+      )
     ).not.toThrow()
 
     const result = await promisify(execFile)(
