@@ -40,11 +40,14 @@ jobs:
         id: npm-lint
         run: npm run lint
 
+      - uses: peaceiris/actions-export-envs@v1.1.0
+        id: envs
+
       - name: Test
         id: npm-ci-test
         run: npm run ci-test
         env:
-          ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTIONS_RUNTIME_TOKEN: ${{ steps.envs.outputs.ACTIONS_RUNTIME_TOKEN }}
 
   test-action:
     name: GitHub Actions Test
