@@ -46,7 +46,11 @@ jobs:
 
   test-action:
     name: GitHub Actions Test
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # As of writing, macos-13 is amd64 and macos-14 is aarch64 (M1)
+        os: [ubuntu-latest, macos-13, macos-14]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -76,7 +80,8 @@ jobs:
         with:
           # TODO: debug why the action seems to invoke with cwd as the `dist` directory
           bundle: ../__tests__/e2e/.build/bundle.cjs
-          name: test-binary-${{ github.sha }}
+          name: test-binary-${{ matrix.os }}-${{ github.sha }}
 
       - name: Verify binary exectuable
-        run: ./__tests__/e2e/.build/test-binary-${{ github.sha }}
+        run:
+          ./__tests__/e2e/.build/test-binary-${{ matrix.os }}-${{ github.sha }}
