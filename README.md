@@ -16,9 +16,9 @@ or self-contained scripts.
 
 See also:
 
-- https://nodejs.org/api/single-executable-applications.html
-- https://github.com/nodejs/single-executable
-- https://notes.billmill.org/programming/javascript/Making_a_single-file_executable_with_node_and_esbuild.html
+- [Node SEA documentation](https://nodejs.org/api/single-executable-applications.html)
+- [Node SEA team on GitHub](https://github.com/nodejs/single-executable)
+- [A helpful blog post on the subject](https://notes.billmill.org/programming/javascript/Making_a_single-file_executable_with_node_and_esbuild.html)
 
 ## How To Use This Action
 
