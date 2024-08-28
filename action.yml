@@ -13,6 +13,11 @@ inputs:
     required: true
   name:
     description: The filename of the output binary (defaults to the repo name)
+  upload-artifact:
+    description:
+      If true, the resulting binary will be uploaded as a "workflow artifact"
+      (defaults to true)
+    default: true
 
 outputs:
   binary-path:

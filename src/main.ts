@@ -113,18 +113,21 @@ export async function run(): Promise<void> {
       join(dirname(bundleEntrypoint), binaryFullPath)
     )
 
-    const artifact = new DefaultArtifactClient()
+    const shouldUploadArtifact = core.getInput('upload-workflow-artifact')
+    if (!!shouldUploadArtifact) {
+      const artifact = new DefaultArtifactClient()
 
-    const { id, size } = await artifact.uploadArtifact(
-      // name of the artifact
-      binaryFilename,
-      // files to include (supports absolute and relative paths)
-      [binaryFullPath],
-      dirname(binaryFullPath)
-    )
-    core.info(
-      `Uploaded artifact "${binaryFilename}" with ID "${id}" (${size} bytes)`
-    )
+      const { id, size } = await artifact.uploadArtifact(
+        // name of the artifact
+        binaryFilename,
+        // files to include (supports absolute and relative paths)
+        [binaryFullPath],
+        dirname(binaryFullPath)
+      )
+      core.info(
+        `Uploaded artifact "${binaryFilename}" with ID "${id}" (${size} bytes)`
+      )
+    }
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) {
