@@ -9,12 +9,14 @@ branding:
 
 inputs:
   bundle:
-    description: Path to the already-bundled Node code.
+    description: Path to the already-bundled Node code
     required: true
+  name:
+    description: The filename of the output binary (defaults to the repo name)
 
 outputs:
   binary-path:
-    description: The filesystem path to the Node binary with the code embedded.
+    description: The filesystem path to the Node binary with the code embedded
 
 runs:
   using: node20
