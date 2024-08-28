@@ -114,7 +114,7 @@ export async function run(): Promise<void> {
     )
 
     const shouldUploadArtifact = core.getInput('upload-workflow-artifact')
-    if (!!shouldUploadArtifact) {
+    if (shouldUploadArtifact) {
       const artifact = new DefaultArtifactClient()
 
       const { id, size } = await artifact.uploadArtifact(
