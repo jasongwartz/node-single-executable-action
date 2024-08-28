@@ -18,10 +18,14 @@ describe('e2e', () => {
   })
 
   it('can build and execute a single executable application', async () => {
+    const outputBinaryName = 'test-binary-123'
+
     getInputMock.mockImplementation(name => {
       switch (name) {
         case 'bundle':
           return '../__tests__/e2e/.build/bundle.cjs'
+        case 'name':
+          return outputBinaryName
         default:
           return ''
       }
@@ -36,21 +40,25 @@ describe('e2e', () => {
     })
 
     await run()
-    expect(getInputMock).toHaveBeenCalledTimes(1)
-    expect(getInputMock).toHaveBeenCalledWith('bundle')
+    expect(getInputMock).toHaveBeenCalledTimes(2)
+    expect(getInputMock).toHaveBeenCalledWith('bundle', { required: true })
+    expect(getInputMock).toHaveBeenCalledWith('name')
     expect(setOutputMock).toHaveBeenCalledTimes(1)
     expect(setOutputMock).toHaveBeenCalledWith(
       'binary-path',
-      expect.stringMatching(RegExp(/\/.+\/bin/))
+      expect.stringMatching(RegExp(`\/.+\/${outputBinaryName}`))
     )
 
     expect(async () =>
       access(join(__dirname, '.build/bin'), constants.X_OK | constants.R_OK)
     ).not.toThrow()
 
-    const result = await promisify(execFile)(join(__dirname, '.build/bin'), {
-      encoding: 'utf-8'
-    })
+    const result = await promisify(execFile)(
+      join(__dirname, `.build/${outputBinaryName}`),
+      {
+        encoding: 'utf-8'
+      }
+    )
     expect(typeof result.stdout).toBe('string')
     expect(result.stdout).toContain('hello')
   }, 10_000)
