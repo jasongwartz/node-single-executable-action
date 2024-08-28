@@ -26,8 +26,6 @@ describe('e2e', () => {
           return '../__tests__/e2e/.build/bundle.cjs'
         case 'name':
           return outputBinaryName
-        case 'upload-artifact':
-          return ''
         default:
           return ''
       }
