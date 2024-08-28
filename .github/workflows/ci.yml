@@ -83,5 +83,4 @@ jobs:
           name: test-binary-${{ matrix.os }}-${{ github.sha }}
 
       - name: Verify binary exectuable
-        run:
-          ./__tests__/e2e/.build/test-binary-${{ matrix.os }}-${{ github.sha }}
+        run: ${{ steps.test-action.outputs.binary-path }}
