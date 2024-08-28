@@ -108,10 +108,7 @@ export async function run(): Promise<void> {
 
     const binaryFullPath = join(dirname(bundleEntrypoint), binaryFilename)
     await io.cp(join(buildDirectory, binaryFilename), binaryFullPath)
-    core.setOutput(
-      'binary-path',
-      join(dirname(bundleEntrypoint), binaryFullPath)
-    )
+    core.setOutput('binary-path', binaryFullPath)
 
     const shouldUploadArtifact = core.getInput('upload-workflow-artifact')
     if (shouldUploadArtifact) {
