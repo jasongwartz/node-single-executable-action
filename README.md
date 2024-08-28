@@ -63,9 +63,10 @@ Example configuration:
   run: ./dist/bin
 ```
 
-> [!WARNING] Binaries built on macOS runners are not notarized, and therefore
-> will be prevented from running after download (you will see an error like
-> "can't be opened because Apple cannot check it for malicious software").
+> [!WARNING] \
+> Binaries built on macOS runners are not notarized, and therefore will be
+> prevented from running after download (you will see an error like "can't be
+> opened because Apple cannot check it for malicious software").
 
 ## Development
 
