@@ -46,7 +46,7 @@ describe('e2e', () => {
     expect(setOutputMock).toHaveBeenCalledTimes(1)
     expect(setOutputMock).toHaveBeenCalledWith(
       'binary-path',
-      expect.stringMatching(RegExp(`\/.+\/${outputBinaryName}`))
+      expect.stringMatching(RegExp(`/.+/${outputBinaryName}`))
     )
 
     expect(async () =>
