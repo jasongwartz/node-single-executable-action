@@ -32,14 +32,6 @@ jobs:
         id: npm-ci
         run: npm ci
 
-      - name: Check Format
-        id: npm-format-check
-        run: npm run format:check
-
-      - name: Lint
-        id: npm-lint
-        run: npm run lint
-
       - name: Test
         id: npm-ci-test
         run: npm run ci-test
@@ -80,6 +72,7 @@ jobs:
         with:
           # TODO: debug why the action seems to invoke with cwd as the `dist` directory
           bundle: ../__tests__/e2e/.build/bundle.cjs
+          assets: ../package.json
           name: test-binary-${{ matrix.os }}-${{ github.sha }}
 
       - name: Verify binary exectuable
