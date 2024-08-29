@@ -29,5 +29,5 @@ outputs:
     description: The filesystem path to the Node binary with the code embedded
 
 runs:
-  using: node22
+  using: node20
   main: dist/index.js
