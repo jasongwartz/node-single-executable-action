@@ -13,8 +13,9 @@ import {
   writeFile
 } from 'fs/promises'
 import { platform, tmpdir } from 'os'
-import { dirname, isAbsolute, join } from 'path'
+import { dirname, isAbsolute, join, sep } from 'path'
 import { inject } from 'postject'
+import { SEAConfig } from './sea-config'
 
 /**
  * The main function for the action.
@@ -43,16 +44,33 @@ export async function run(): Promise<void> {
   const buildDirectory = await mkdtemp(
     join(tmpdir(), 'node-sea-github-action-')
   )
+  core.info(`Using build directory: ${buildDirectory}`)
 
   const blobFilepath = join(buildDirectory, 'sea.blob')
+
+  const assets = core
+    .getInput('assets')
+    .split(/[\n|,]/)
+    .map(assetPath => join(__dirname, assetPath))
+
+  const seaConfig: SEAConfig = {
+    // SEA CONFIGURATION VALUES
+    main: bundleEntrypoint,
+    output: blobFilepath,
+    assets: assets.length
+      ? Object.fromEntries(
+          assets.map(a => {
+            const pathSplit = a.split(sep)
+            return [pathSplit[pathSplit.length - 1], a]
+          })
+        )
+      : undefined,
+    disableExperimentalSEAWarning: true
+  }
+
   await writeFile(
     join(buildDirectory, 'sea-config.json'),
-    JSON.stringify({
-      // SEA CONFIGURATION VALUES
-      main: bundleEntrypoint,
-      output: blobFilepath,
-      disableExperimentalSEAWarning: true
-    })
+    JSON.stringify(seaConfig)
   )
 
   try {

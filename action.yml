@@ -13,6 +13,11 @@ inputs:
     required: true
   name:
     description: The filename of the output binary (defaults to the repo name)
+  assets:
+    description:
+      A comma-separated or newline-separated list of files to be included in the
+      executable as "SEA assets" (see the SEA documentation on how to use the
+      "node:sea" package to retrieve these assets in code)
   upload-workflow-artifact:
     description:
       If any truthy string, the resulting binary will be uploaded as a "workflow

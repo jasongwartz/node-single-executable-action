@@ -26,6 +26,8 @@ describe('e2e', () => {
           return '../__tests__/e2e/.build/bundle.cjs'
         case 'name':
           return outputBinaryName
+        case 'assets':
+          return '../package.json'
         default:
           return ''
       }
@@ -40,7 +42,7 @@ describe('e2e', () => {
     })
 
     await run()
-    expect(getInputMock).toHaveBeenCalledTimes(3)
+    expect(getInputMock).toHaveBeenCalledTimes(4)
     expect(getInputMock).toHaveBeenCalledWith('bundle', { required: true })
     expect(getInputMock).toHaveBeenCalledWith('name')
     expect(setOutputMock).toHaveBeenCalledTimes(1)
